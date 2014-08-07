@@ -46,11 +46,6 @@ au FileType diff colorscheme desert
 au FileType git colorscheme desert
 au BufWinLeave * colorscheme vibrantink
 
-augroup markdown
-  au!
-  au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
-augroup END
-
 " File Types
 
 autocmd FileType php setlocal tabstop=4 shiftwidth=4 softtabstop=4
@@ -144,9 +139,6 @@ map <silent> <leader>ff :CommandT<CR>
 map <silent> <leader>fb :CommandTBuffer<CR>
 map <silent> <leader>fr :CommandTFlush<CR>
 
-" Ack
-map <LocalLeader>aw :Ack '<C-R><C-W>'
-
 " TComment
 map <silent> <LocalLeader>cc :TComment<CR>
 map <silent> <LocalLeader>uc :TComment<CR>
@@ -187,20 +179,6 @@ imap <C-L> <SPACE>=><SPACE>
 
 command! SudoW w !sudo tee %
 
-" http://techspeak.plainlystated.com/2009/08/vim-tohtml-customization.html
-function! DivHtml(line1, line2)
-  exec a:line1.','.a:line2.'TOhtml'
-  %g/<style/normal $dgg
-  %s/<\/style>\n<\/head>\n//
-  %s/body {/.vim_block {/
-  %s/<body\(.*\)>\n/<div class="vim_block"\1>/
-  %s/<\/body>\n<\/html>/<\/div>
-  "%s/\n/<br \/>\r/g
-
-  set nonu
-endfunction
-command! -range=% DivHtml :call DivHtml(<line1>,<line2>)
-
 function! GitGrepWord()
   cgetexpr system("git grep -n '" . expand("<cword>") . "'")
   cwin
@@ -215,31 +193,25 @@ endfunction
 command! -nargs=0 Trim :call Trim()
 nnoremap <silent> <Leader>cw :Trim<CR>
 
-function! StartInferiorSlimeServer()
-  let g:__InferiorSlimeRunning = 1
-  call VimuxRunCommand("inferior-slime")
-endfunction
-command! -nargs=0 StartInferiorSlimeServer :call StartInferiorSlimeServer()
+"--- EDGE (vim-edge)
+" colorscheme Tomorrow-Night
+" au BufWinLeave * colorscheme Tomorrow-Night
 
-function! __Edge()
-  colorscheme Tomorrow-Night
-  au BufWinLeave * colorscheme Tomorrow-Night
+set ttyfast
 
-  set ttyfast
+map <leader>nf :e%:h<CR>
+map <C-p> :CommandT<CR>
 
-  map <leader>nf :e%:h<CR>
-  map <C-p> :CommandT<CR>
+let g:VimuxOrientation = "h"
+let g:VimuxHeight = "40"
+"--- ENDEDGE (vim-edge)
 
-  let g:VimuxOrientation = "h"
-  let g:VimuxHeight = "40"
-endfunction
+"-------- Tab mappings
+"Close tabs with tc
+noremap tc :tabclose<CR>
 
-function! __HardMode()
-  nmap h <nop>
-  nmap j <nop>
-  nmap k <nop>
-  nmap l <nop>
-endfunction
+"Create new tab with Ctl+t
+noremap tt :tabnew<CR>
 
 "-------- Local Overrides
 ""If you have options you'd like to override locally for
